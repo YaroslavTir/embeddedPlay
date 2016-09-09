@@ -1,12 +1,10 @@
 package com.example.entity;
 
+import com.example.EmbeddedPrefix;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 /**
@@ -25,8 +23,9 @@ public class Test {
 
     @Embedded
     private Address address;
-//
-//    @Embedded
-//    private Address officeAddress;
+
+    @Embedded
+    @EmbeddedPrefix("office")
+    private Address officeAddress;
 
 }

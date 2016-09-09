@@ -18,7 +18,6 @@ public class TestController {
     @RequestMapping(value = "/*", method = RequestMethod.GET)
     public String test() {
         Test test = testService.getTest();
-//        return test.getAddress().getStreet() +" " + test.getOfficeAddress().getStreet();
-        return test.getAddress().getStreet();
+        return test.getAddress().getStreet() +" " + test.getOfficeAddress().getStreet();
     }
 }
