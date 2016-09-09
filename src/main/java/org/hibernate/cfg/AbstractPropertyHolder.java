@@ -24,7 +24,6 @@
 package org.hibernate.cfg;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
@@ -37,9 +36,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.MappedSuperclass;
 
-import com.example.EmbeddedPrefix;
-import com.example.ColumnAnnotationProvider;
-import com.example.EmbeddedPrefixOverrideHack;
 import org.hibernate.AnnotationException;
 import org.hibernate.AssertionFailure;
 import org.hibernate.annotations.common.reflection.XAnnotatedElement;
@@ -69,6 +65,8 @@ public abstract class AbstractPropertyHolder implements PropertyHolder {
     private String path;
     private Mappings mappings;
     private Boolean isInIdClass;
+    private static ColumnEmbeddedPrefixOverrideHack columnOverrideHack = new ColumnEmbeddedPrefixOverrideHack();
+    private static JoinColumnEmbeddedPrefixOverrideHack joinColumnOverrideHack = new JoinColumnEmbeddedPrefixOverrideHack();
 
     AbstractPropertyHolder(
             String path,
@@ -391,8 +389,8 @@ public abstract class AbstractPropertyHolder implements PropertyHolder {
         Map<String, Column[]> columnOverride = new HashMap<String, Column[]>();
         if ( element == null ) return columnOverride;
 
-        //TODO I added only this string in original code
-        EmbeddedPrefixOverrideHack.embeddedPrefixOverride(element, path, columnOverride);
+        //TODO inject hack code for column
+        columnOverrideHack.embeddedPrefixOverride(element, path, columnOverride);
 
         AttributeOverride singleOverride = element.getAnnotation( AttributeOverride.class );
         AttributeOverrides multipleOverrides = element.getAnnotation( AttributeOverrides.class );
@@ -424,6 +422,9 @@ public abstract class AbstractPropertyHolder implements PropertyHolder {
     private static Map<String, JoinColumn[]> buildJoinColumnOverride(XAnnotatedElement element, String path) {
         Map<String, JoinColumn[]> columnOverride = new HashMap<String, JoinColumn[]>();
         if ( element == null ) return columnOverride;
+
+        //TODO inject hack code for joinColumn
+        joinColumnOverrideHack.embeddedPrefixOverride(element, path, columnOverride);
         AssociationOverride singleOverride = element.getAnnotation( AssociationOverride.class );
         AssociationOverrides multipleOverrides = element.getAnnotation( AssociationOverrides.class );
         AssociationOverride[] overrides;

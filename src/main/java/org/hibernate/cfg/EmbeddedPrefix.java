@@ -1,4 +1,4 @@
-package com.example;
+package org.hibernate.cfg;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

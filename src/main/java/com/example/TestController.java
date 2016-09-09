@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.entity.Test;
+import com.example.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class TestController {
 
     @RequestMapping(value = "/*", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Test test() {
-        return testService.getTest();
+    public Person index() {
+        return testService.getPerson();
     }
 }

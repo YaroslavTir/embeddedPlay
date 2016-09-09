@@ -1,6 +1,6 @@
 package com.example.entity;
 
-import com.example.EmbeddedPrefix;
+import org.hibernate.cfg.EmbeddedPrefix;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.Type;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Data
-public class Test implements Serializable {
+public class Person implements Serializable {
 
     @Id
     @Type(type = "uuid-char")
