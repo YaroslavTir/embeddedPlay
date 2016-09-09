@@ -2,6 +2,7 @@ package com.example;
 
 import com.example.entity.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,9 +16,9 @@ public class TestController {
     @Autowired
     private TestService testService;
 
-    @RequestMapping(value = "/*", method = RequestMethod.GET)
-    public String test() {
-        Test test = testService.getTest();
-        return test.getAddress().getStreet() +" " + test.getOfficeAddress().getStreet();
+    @RequestMapping(value = "/*", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Test test() {
+        return testService.getTest();
     }
 }

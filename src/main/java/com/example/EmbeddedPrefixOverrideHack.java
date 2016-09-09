@@ -7,6 +7,7 @@ import org.hibernate.cfg.AccessType;
 import org.hibernate.internal.util.StringHelper;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import java.util.List;
 import java.util.Map;
 
@@ -20,16 +21,30 @@ public class EmbeddedPrefixOverrideHack {
         if (embeddedPrefixAnnotation != null){
             if (element instanceof XProperty){
                 XProperty xProperty = (XProperty) element;
-                XClass xClass = xProperty.getClassOrElementClass();
-                if (xClass != null){
-                    List<XProperty> declaredProperties = xClass.getDeclaredProperties(AccessType.FIELD.getType());
-                    for (XProperty declaredProperty : declaredProperties) {
-                        Column annotation = declaredProperty.getAnnotation(Column.class);
-                        Column newAnnotation = ColumnAnnotationProvider.getInstance(embeddedPrefixAnnotation.value(), annotation);
+                processProperty(xProperty, path, columnOverride, embeddedPrefixAnnotation.value());
+            }
+        }
+    }
+
+    //todo possible infinity recursion!
+    private static void processProperty(XProperty xProperty, String path,
+                                        Map<String, Column[]> columnOverride,
+                                        String prefix) {
+            XClass xClass = xProperty.getClassOrElementClass();
+            if (xClass != null){
+                List<XProperty> declaredProperties = xClass.getDeclaredProperties(AccessType.FIELD.getType());
+                for (XProperty declaredProperty : declaredProperties) {
+                    Embedded embeddedAnnotation = declaredProperty.getAnnotation(Embedded.class);
+                    if (embeddedAnnotation != null){
+                        processProperty(declaredProperty, path+ "."+declaredProperty.getName(), columnOverride, prefix);
+                    }
+                    Column columnAnnotation = declaredProperty.getAnnotation(Column.class);
+                    if (columnAnnotation != null){
+                        Column newAnnotation = ColumnAnnotationProvider.getInstance(prefix, columnAnnotation);
                         columnOverride.put(StringHelper.qualify(path, declaredProperty.getName()), new Column[] { newAnnotation });
                     }
                 }
             }
-        }
+
     }
 }

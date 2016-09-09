@@ -7,7 +7,7 @@ import javax.persistence.Column;
  */
 public class ColumnAnnotationProvider {
     public static Column getInstance(final String prefix, final Column column) {
-        return  new Column() {
+        return new Column() {
             @Override
             public String name() {
                 return prefix + "_" + column.name();
